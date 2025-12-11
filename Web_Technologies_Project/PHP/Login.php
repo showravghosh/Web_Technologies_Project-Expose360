@@ -1,3 +1,9 @@
+<?php
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +47,7 @@
 
                 <div class="actions">
                     <a href="#" class="forgot">Forgot Password?</a>
-                    <a href="registration.html" class="create">Create New</a>
+                    <a href="registration.php" class="create">Create New</a>
                 </div>
 
                 <button type="submit">Sign In to Account</button>

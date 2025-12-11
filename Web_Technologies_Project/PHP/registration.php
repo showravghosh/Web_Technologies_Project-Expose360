@@ -1,3 +1,9 @@
+<?php
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +15,7 @@
 <body>
 
     <div class="back-btn-area">
-        <a href="Login.html" class="back-btn">Back to Login</a>
+        <a href="Login.php" class="back-btn">Back to Login</a>
     </div>
 
 
@@ -141,7 +147,7 @@
 
         <div class="footer">
             Already have an account?
-            <a href="Login.html">Sign In Here</a>
+            <a href="Login.php">Sign In Here</a>
         </div>
 
     </div>
