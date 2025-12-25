@@ -70,6 +70,7 @@
                         <th>Name</th>
                         <th>Date Joined</th>
                         <th>Salary</th>
+                        <th>Phone Number</th>
                         <th>Gender</th>
                         <th>Actions</th>
                     </tr>
