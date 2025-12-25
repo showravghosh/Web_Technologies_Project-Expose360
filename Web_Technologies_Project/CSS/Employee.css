@@ -1,0 +1,230 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.top-bar {
+    height: 70px;
+    background: rgb(30,41,59);
+    border: 1px solid rgb(51, 65, 85); 
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    color: rgb(255, 255, 255);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.highlight {
+    color: rgb(34, 211, 238);
+}
+
+.page-title {
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.nav-buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
+
+
+.btn {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: lightgoldenrodyellow;
+}
+
+.btn-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.back  { 
+    background: rgb(37, 150, 187); 
+}
+.home  {
+     background: rgb(37, 150, 187); 
+    }
+.add   { 
+    background: green; 
+}
+.reset { 
+    background: orange; 
+}
+.clear { 
+    background: rgb(37, 150, 187); 
+}
+
+
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: rgb(15, 23, 42);
+    min-height: 90vh;
+}
+
+
+.form-card {
+    width: 320px;
+    background: rgb(30, 41, 59);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.form-card label {
+    color: lightgoldenrodyellow;
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+}
+
+.form-card input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: none;
+    background: rgb(51, 65, 85);
+    color: lightgoldenrodyellow;
+}
+
+
+.radio-group {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: whitesmoke;
+    cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    accent-color: rgb(34, 179, 227);
+}
+
+.form-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+
+.table-card {
+    flex: 1;
+    background: rgb(30, 41, 59);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgb(51, 65, 85);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: whitesmoke;
+    outline: none;
+}
+
+.search-icon {
+    width: 16px;
+    height: 16px;
+}
+
+
+table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    color: whitesmoke;
+    border-bottom: 1px solid rgb(51, 65, 85);
+    text-align: left;
+}
+
+th {
+    font-size: 13px;
+    color: rgb(148, 163, 184);
+}
+
+th:first-child,
+td:first-child {
+    width: 50px;
+    text-align: center;
+}
+
+h3 {
+    color: whitesmoke;
+    margin-top: 15px;
+}
+
+
+.actions {
+    display: inline-flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.action-btn {
+    background: transparent;
+    border: none;
+    color: rgb(41, 167, 202);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+}
+
+.action-btn.delete {
+    color: rgb(225, 69, 69);
+}
+
+.action-icon {
+    width: 14px;
+    height: 14px;
+}
