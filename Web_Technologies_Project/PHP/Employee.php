@@ -65,6 +65,9 @@
                 <button class="btn reset">
                     <img src="../Photos/reset.png" class="btn-icon"> Reset
                 </button>
+                 <button class="btn update">
+                    <img src="../Photos/update.png" class="btn-icon"> Update
+                </button>
             </div>
 
         </form>
