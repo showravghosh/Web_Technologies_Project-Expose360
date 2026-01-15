@@ -17,7 +17,7 @@
             <div class="nav-right">
                 <span class="welcome-text">Welcome, Admin!</span>
                 <button class="nav-btn" onclick="location.href='dashboard.php'" title="Home">
-                    <img src="../../../Resources/Photos/home.png" alt="Home" class="nav-icon">
+                    <img src="../../../Resources/Photos/homei.png" alt="Home" class="nav-icon">
                 </button>
                 <button class="logout-btn" onclick ="location.href='../Auth/login.php'" title="Logout">
                     <img src="../../../Resources/Photos/logout.png" alt="Logout" class="nav-icon"> Logout
@@ -36,8 +36,8 @@
         <div class="sidebar">
             <nav class="sidebar-nav">
                 <h3 class="sidebar-title">Management</h3>
-                <a href="#news_feed" class="menu-item active">
-                    <img src="../../../Resources/Photos/home.png" alt="News Feed" class="menu-icon"> News Feed
+                <a href="dashboard.php" class="menu-item active">
+                    <img src="../../../Resources/Photos/homei.png" alt="News Feed" class="menu-icon"> News Feed
                 </a>
                 <a href="Users/user_list.php" class="menu-item">
                     <img src="../../../Resources/Photos/user.png" alt="Users" class="menu-icon"> Users List
@@ -54,14 +54,17 @@
                 <a href="Users/reg_admin.php" class="menu-item">
                     <img src="../../../Resources/Photos/addAdmin.png" alt="Add Admin" class="menu-icon"> Add New Admin
                 </a>
+
+                <a href="Users/admin_list.php" class="menu-item">
+                    <img src="../../../Resources/Photos/coni.png" alt="Admin" class="menu-icon"> Admin List
+                </a>
+
                 <a href="Users/deleted_admin.php" class="menu-item">
                     <img src="../../../Resources/Photos/delete.png" alt="Deleted Admins" class="menu-icon"> Deleted Admins List
                 </a>
-                <a href="#verification" class="menu-item">
-                    <img src="../../../Resources/Photos/verification.png" alt="Verification" class="menu-icon"> Verification Request List
-                </a>
-                <a href="#report_list" class="menu-item">
-                    <img src="../../../Resources/Photos/report.png" alt="Reports" class="menu-icon"> Report List
+
+                <a href="Users/verification_request.php" class="menu-item">
+                    <img src="../../../Resources/Photos/compliant.png" alt="Verification" class="menu-icon"> Verification Request List
                 </a>
                 <a href="#deleted_post" class="menu-item">
                     <img src="../../../Resources/Photos/delete.png" alt="Deleted Posts" class="menu-icon"> Deleted Post

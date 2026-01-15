@@ -27,7 +27,7 @@
         </div>
 
         <nav class="right-section">
-            <button class="icon-btn"><a href="dashboard.php" class="home-btn"><img src="../../../Resources/Photos/home.png" class="nav-icon"></a></button>
+            <button class="icon-btn"><a href="dashboard.php" class="home-btn"><img src="../../../Resources/Photos/homei.png" class="nav-icon"></a></button>
             <button class="icon-btn"><img src="../../../Resources/Photos/bell.png" class="nav-icon"></button>
             <button class="icon-btn"><img src="../../../Resources/Photos/message.png" class="nav-icon"></button>
 

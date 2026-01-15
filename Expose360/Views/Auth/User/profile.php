@@ -19,7 +19,7 @@
             </div>
             <div class="nav-right">
                 <button class="nav-btn" title="Home" onclick="window.location.href='dashboard.php'">
-                    <img src="../../../Resources/Photos/home.png" alt="Home" class="nav-icon">
+                    <img src="../../../Resources/Photos/homei.png" alt="Home" class="nav-icon">
                 </button>
                 <button class="nav-btn logout-btn" title="Logout" onclick="window.location.href='../Auth/login.php'">
                     <img src="../../../Resources/Photos/logout.png" alt="Logout" class="nav-icon">
