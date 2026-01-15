@@ -39,22 +39,22 @@
                 <a href="#news_feed" class="menu-item active">
                     <img src="../../../Resources/Photos/home.png" alt="News Feed" class="menu-icon"> News Feed
                 </a>
-                <a href="#users_list" class="menu-item">
+                <a href="Users/user_list.php" class="menu-item">
                     <img src="../../../Resources/Photos/user.png" alt="Users" class="menu-icon"> Users List
                 </a>
-                <a href="#deleted_users" class="menu-item">
+                <a href="Users/deleted_user.php" class="menu-item">
                     <img src="../../../Resources/Photos/delete.png" alt="Deleted Users" class="menu-icon"> Deleted Users List
                 </a>
-                <a href="#employees_list" class="menu-item">
+                <a href="Users/employee_list.php" class="menu-item">
                     <img src="../../../Resources/Photos/employee.png" alt="Employees" class="menu-icon"> Employees List
                 </a>
-                <a href="#deleted_employees" class="menu-item">
+                <a href="Users/deleted_employee.php" class="menu-item">
                     <img src="../../../Resources/Photos/delete.png" alt="Deleted Employees" class="menu-icon"> Deleted Employees List
                 </a>
-                <a href="#add_admin" class="menu-item">
+                <a href="Users/reg_admin.php" class="menu-item">
                     <img src="../../../Resources/Photos/addAdmin.png" alt="Add Admin" class="menu-icon"> Add New Admin
                 </a>
-                <a href="#deleted_admins" class="menu-item">
+                <a href="Users/deleted_admin.php" class="menu-item">
                     <img src="../../../Resources/Photos/delete.png" alt="Deleted Admins" class="menu-icon"> Deleted Admins List
                 </a>
                 <a href="#verification" class="menu-item">
