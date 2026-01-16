@@ -29,6 +29,12 @@
     gap: 15px;
 }
 
+.top-bar .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .top-bar h1 {
     font-size: 18px;
     font-weight: bold;
@@ -58,7 +64,7 @@
 }
 
 .back {
-    background: rgb(51, 65, 85);
+    background: rgb(37, 150, 187);
 }
 
 .home {

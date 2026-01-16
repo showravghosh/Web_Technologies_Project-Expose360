@@ -16,20 +16,25 @@
 
 <!-- TOP BAR -->
 <header class="top-bar">
-    <div class="left">
-        <button class="btn back" onclick ="history.back()">
-            <img src="../../../../Resources/Photos/back.png" class="btn-icon"> Back
-        </button>
 
+    <div class="left">
         <h1>
             Expose<span class="highlight">360</span> / Deleted Users
         </h1>
     </div>
 
-    <button class="btn home" onclick="location.href='../dashboard.php'">
-        <img src="../../../../Resources/Photos/home.png" class="btn-icon">
-    </button>
+    <div class="right">
+        <button class="btn back" onclick="history.back()">
+            <img src="../../../../Resources/Photos/back.png" class="btn-icon"> Back
+        </button>
+
+        <button class="btn home" onclick="location.href='../dashboard.php'">
+            <img src="../../../../Resources/Photos/home.png" class="btn-icon">
+        </button>
+    </div>
+
 </header>
+
 
 <!-- MAIN CONTAINER -->
 <div class="container">
