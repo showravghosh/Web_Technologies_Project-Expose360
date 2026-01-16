@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.top-bar {
+    height: 70px;
+    background: rgb(30,41,59);
+    border: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    color: whitesmoke;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.highlight {
+    color: rgb(34, 211, 238);
+}
+
+.page-title {
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.nav-buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
+
+
+.btn {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: whitesmoke;
+}
+
+.btn-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.back  { 
+    background: rgb(37, 150, 187); 
+}
+.home  {
+     background: rgb(37, 150, 187); 
+    }
+.add   { 
+    background: green; 
+}
+.reset { 
+    background: orange; 
+}
+
+
+
+.container {
+    min-height: 90vh;
+    background: rgb(15, 23, 42);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+
+.card {
+    width: 100%;
+    max-width: 420px;
+    background:  rgb(30, 41, 59);
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid rgb(51, 65, 85);
+}
+
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    color: whitesmoke;
+    font-size: 22px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgb(24, 212, 212);
+}
+
+.title-icon {
+    width: 26px;
+    height: 26px;
+}
+
+
+label {
+    color: whitesmoke;
+    font-size: 14px;
+    margin-top: 12px;
+    display: block;
+}
+
+.input-box {
+    position: relative;
+    margin-top: 6px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+}
+
+input {
+    width: 100%;
+    padding: 10px 36px;
+    border-radius: 8px;
+    border: none;
+    background: rgb(51, 65, 85);
+    color: whitesmoke;
+}
+
+
+.radio-group {
+    margin-top: 8px;
+    display: flex;
+    gap: 20px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: whitesmoke;
+}
+
+.radio-group input {
+    accent-color:  rgb(34, 179, 227);
+}
+
+.form-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+}
