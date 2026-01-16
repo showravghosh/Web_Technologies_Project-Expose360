@@ -5,11 +5,11 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* TOP BAR */
+/* HEADER */
 .top-bar {
     height: 70px;
     background: rgb(30, 41, 59);
-    border-bottom: 1px solid rgb(51, 65, 85);
+    border: 1px solid rgb(51, 65, 85);
     display: flex;
     align-items: center;
     padding: 0 20px;
@@ -54,80 +54,62 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    color: white;
-    font-size: 14px;
+    color: lightgoldenrodyellow;
 }
 
 .btn-icon {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
-.back {
+.back,
+.home,
+.clear {
     background: rgb(37, 150, 187);
 }
 
-.home {
-    background: rgb(37, 150, 187);
-}
-
-.restore {
+.approve {
     background: green;
 }
 
-.delete {
-    background: rgb(185, 28, 28);
+.reject {
+    background: rgb(225, 69, 69);
 }
 
-/* MAIN CONTAINER */
+/* MAIN */
 .container {
+    display: flex;
+    gap: 20px;
     padding: 20px;
     background: rgb(15, 23, 42);
-    min-height: calc(100vh - 70px);
+    min-height: 90vh;
 }
 
-/* CARD */
-.card {
+/* TABLE CARD */
+.table-card {
+    flex: 2;
     background: rgb(30, 41, 59);
     padding: 20px;
-    border-radius: 14px;
+    border-radius: 12px;
 }
 
-.card-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: whitesmoke;
-    font-size: 20px;
-    margin-bottom: 20px;
-}
-
-.title-icon {
-    width: 28px;
-    height: 28px;
-}
-
-
-.search-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
-
-
-/* SEARCH & ACTIONS */
+/* SEARCH */
 .search-box {
     display: flex;
     align-items: center;
     gap: 10px;
     background: rgb(51, 65, 85);
-    padding: 10px 14px;
+    padding: 10px;
     border-radius: 10px;
-    width: 320px;
-    max-width: 100%;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: whitesmoke;
+    outline: none;
 }
 
 .search-icon {
@@ -135,67 +117,82 @@
     height: 16px;
 }
 
-.search-box input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    outline: none;
-    color: whitesmoke;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
-}
-
 /* TABLE */
 .table-wrapper {
+    width: 100%;
     overflow-x: auto;
-    background: rgb(30, 41, 59);
-    border-radius: 12px;
 }
 
 table {
     width: 100%;
+    min-width: 1100px;
     border-collapse: collapse;
+    margin-top: 15px;
 }
 
-<<<<<<< HEAD
-th,
-td {
-=======
 th, td {
->>>>>>> refs/remotes/origin/master
-    padding: 12px;
-    text-align: left;
+    padding: 10px;
     color: whitesmoke;
     border-bottom: 1px solid rgb(51, 65, 85);
-    font-size: 14px;
+    text-align: left;
+    white-space: nowrap;
 }
 
 th {
+    font-size: 13px;
     color: rgb(148, 163, 184);
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+}
+
+.action-btn {
+    background: transparent;
+    border: none;
+    color: rgb(41, 167, 202);
+    cursor: pointer;
     font-size: 13px;
 }
 
-td:last-child {
-    text-align: center;
+h3 {
+    color: whitesmoke;
+    margin-top: 15px;
 }
 
-/* ACTION LINKS */
-.action-link {
-    cursor: pointer;
-    font-weight: bold;
+/* DETAILS CARD */
+.details-card {
+    width: 300px;
+    background: rgb(30, 41, 59);
+    padding: 20px;
+    border-radius: 12px;
 }
 
-.action-link.restore {
-    color: rgb(34, 197, 94);
+.detail-box {
+    margin-top: 15px;
 }
 
-.action-link.delete {
-    color: rgb(239, 68, 68);
-<<<<<<< HEAD
+.detail-box label {
+    font-size: 13px;
+    color: rgb(148, 163, 184);
 }
-=======
+
+.detail-value {
+    height: 36px;
+    margin-top: 6px;
+    background: rgb(51, 65, 85);
+    border-radius: 6px;
 }
->>>>>>> refs/remotes/origin/master
+
+.detail-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.note {
+    font-size: 12px;
+    color: rgb(148, 163, 184);
+    margin-top: 15px;
+}
