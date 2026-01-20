@@ -18,6 +18,7 @@
 <header class="top-bar">
 
     <div class="left">
+    
         <h1>
             Expose<span class="highlight">360</span> / Deleted Users
         </h1>
@@ -34,7 +35,6 @@
     </div>
 
 </header>
-
 
 <!-- MAIN CONTAINER -->
 <div class="container">
