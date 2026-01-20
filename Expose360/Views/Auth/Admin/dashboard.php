@@ -66,7 +66,7 @@
                 <a href="Users/verification_request.php" class="menu-item">
                     <img src="../../../Resources/Photos/compliant.png" alt="Verification" class="menu-icon"> Verification Request List
                 </a>
-
+                
                 <a href="Users/deleted_post.php" class="menu-item">
                     <img src="../../../Resources/Photos/delete.png" alt="Deleted Posts" class="menu-icon"> Deleted Post
                 </a>
