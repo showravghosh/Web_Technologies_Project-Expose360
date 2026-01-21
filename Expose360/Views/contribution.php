@@ -64,7 +64,7 @@
                     <p class="name">Tanvir Ahmed</p>
                     <p class="role">Lead Architect</p>
                 </div>
-                <img src="../Resources/Photos/tanvir.jpg" class="member-icon" alt="Users">
+                <img src="../Resources/Photos/Tanvir.jpeg" class="member-icon" alt="Users">
             </div>
 
             <div class="footer">

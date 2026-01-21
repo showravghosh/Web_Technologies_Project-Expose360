@@ -1,168 +1,175 @@
 <?php
 require_once 'Database.php';
 
+
 class Admin {
-    private $db;
-    private $userId;
+    private $conn;
+    private $adminTable = "admin_account";
+    private $empTable   = "emp_account";  
+    private $verTable   = "verification_req";
 
-    public function __construct($userId = null) {
-        $this->db = Database::getInstance()->getConnection();
-        $this->userId = $userId;
+    public function __construct() {
+        $this->conn = Database::getInstance()->getConnection();
     }
 
-    // Get dashboard statistics
-    public function getDashboardStats() {
-        try {
-            $stats = [];
+    //  Admin login (simple)
+    public function login($email, $password) {
+        $email    = mysqli_real_escape_string($this->conn, $email);
+        $password = mysqli_real_escape_string($this->conn, $password);
 
-            // Total users count
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total_users FROM users WHERE role = 'user'");
-            $stmt->execute();
-            $stats['total_users'] = $stmt->fetch(PDO::FETCH_ASSOC)['total_users'];
+        $sql = "SELECT * FROM {$this->adminTable}
+                WHERE email='$email' AND password='$password'
+                AND status='Active'
+                LIMIT 1";
 
-            // Total admins count
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total_admins FROM users WHERE role = 'admin'");
-            $stmt->execute();
-            $stats['total_admins'] = $stmt->fetch(PDO::FETCH_ASSOC)['total_admins'];
-
-            // Total employees count
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total_employees FROM users WHERE role = 'employee'");
-            $stmt->execute();
-            $stats['total_employees'] = $stmt->fetch(PDO::FETCH_ASSOC)['total_employees'];
-
-            // Total posts count
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total_posts FROM posts");
-            $stmt->execute();
-            $stats['total_posts'] = $stmt->fetch(PDO::FETCH_ASSOC)['total_posts'];
-
-            // Pending posts count
-            $stmt = $this->db->prepare("SELECT COUNT(*) as pending_posts FROM posts WHERE status = 'pending'");
-            $stmt->execute();
-            $stats['pending_posts'] = $stmt->fetch(PDO::FETCH_ASSOC)['pending_posts'];
-
-            // Approved posts count
-            $stmt = $this->db->prepare("SELECT COUNT(*) as approved_posts FROM posts WHERE status = 'approved'");
-            $stmt->execute();
-            $stats['approved_posts'] = $stmt->fetch(PDO::FETCH_ASSOC)['approved_posts'];
-
-            // Rejected posts count
-            $stmt = $this->db->prepare("SELECT COUNT(*) as rejected_posts FROM posts WHERE status = 'rejected'");
-            $stmt->execute();
-            $stats['rejected_posts'] = $stmt->fetch(PDO::FETCH_ASSOC)['rejected_posts'];
-
-            // Total contributions count
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total_contributions FROM contributions");
-            $stmt->execute();
-            $stats['total_contributions'] = $stmt->fetch(PDO::FETCH_ASSOC)['total_contributions'];
-
-            return [
-                'success' => true,
-                'data' => $stats
-            ];
-        } catch (PDOException $e) {
-            return [
-                'success' => false,
-                'error' => 'Failed to fetch dashboard statistics: ' . $e->getMessage()
-            ];
+        $result = mysqli_query($this->conn, $sql);
+        if ($result && mysqli_num_rows($result) === 1) {
+            return mysqli_fetch_assoc($result);
         }
+        return false;
     }
 
-    // Get recent activities
-    public function getRecentActivities($limit = 10) {
-        try {
-            $query = "
-                SELECT 
-                    'post' as type,
-                    p.title,
-                    p.created_at as date,
-                    u.username as user,
-                    p.status
-                FROM posts p
-                JOIN users u ON p.user_id = u.id
-                UNION ALL
-                SELECT 
-                    'user' as type,
-                    CONCAT('New ', u.role) as title,
-                    u.created_at as date,
-                    u.username as user,
-                    'active' as status
-                FROM users u
-                ORDER BY date DESC
-                LIMIT :limit
-            ";
 
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-            $stmt->execute();
-            
-            return [
-                'success' => true,
-                'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)
-            ];
-        } catch (PDOException $e) {
-            return [
-                'success' => false,
-                'error' => 'Failed to fetch recent activities: ' . $e->getMessage()
-            ];
+    // Login check (returns admin even if Inactive, but not Deleted)
+    public function loginAnyStatus($email, $password) {
+        $email    = mysqli_real_escape_string($this->conn, $email);
+        $password = mysqli_real_escape_string($this->conn, $password);
+
+        $sql = "SELECT * FROM {$this->adminTable}
+                WHERE email='$email' AND password='$password'
+                AND status <> 'Deleted'
+                LIMIT 1";
+
+        $result = mysqli_query($this->conn, $sql);
+        if ($result && mysqli_num_rows($result) === 1) {
+            return mysqli_fetch_assoc($result);
         }
+        return false;
     }
 
-    // Get category-wise post distribution
-    public function getCategoryStats() {
-        try {
-            $query = "
-                SELECT 
-                    category,
-                    COUNT(*) as count,
-                    (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM posts)) as percentage
-                FROM posts 
-                WHERE status = 'approved'
-                GROUP BY category
-                ORDER BY count DESC
-            ";
+    public function registerAdmin($data) {
+        $full_name = mysqli_real_escape_string($this->conn, $data['full_name'] ?? '');
+        $email     = mysqli_real_escape_string($this->conn, $data['email'] ?? '');
+        $phone     = mysqli_real_escape_string($this->conn, $data['phone'] ?? '');
+        $gender    = mysqli_real_escape_string($this->conn, $data['gender'] ?? 'Other');
+        $password  = mysqli_real_escape_string($this->conn, $data['password'] ?? '');
+        $role      = mysqli_real_escape_string($this->conn, $data['role'] ?? 'Admin');
 
-            $stmt = $this->db->prepare($query);
-            $stmt->execute();
-            
-            return [
-                'success' => true,
-                'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)
-            ];
-        } catch (PDOException $e) {
-            return [
-                'success' => false,
-                'error' => 'Failed to fetch category statistics: ' . $e->getMessage()
-            ];
-        }
+        $sql = "INSERT INTO {$this->adminTable} (full_name, email, phone, gender, password, role)
+                VALUES ('$full_name', '$email', '$phone', '$gender', '$password', '$role')";
+        return mysqli_query($this->conn, $sql);
     }
 
-    // Get monthly post growth
-    public function getMonthlyGrowth($months = 6) {
-        try {
-            $query = "
-                SELECT 
-                    DATE_FORMAT(created_at, '%Y-%m') as month,
-                    COUNT(*) as post_count
-                FROM posts
-                WHERE created_at >= DATE_SUB(NOW(), INTERVAL :months MONTH)
-                GROUP BY DATE_FORMAT(created_at, '%Y-%m')
-                ORDER BY month
-            ";
-
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':months', $months, PDO::PARAM_INT);
-            $stmt->execute();
-            
-            return [
-                'success' => true,
-                'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)
-            ];
-        } catch (PDOException $e) {
-            return [
-                'success' => false,
-                'error' => 'Failed to fetch monthly growth: ' . $e->getMessage()
-            ];
+    public function getAllAdmins() {
+        $sql = "SELECT * FROM {$this->adminTable} WHERE status <> 'Deleted' ORDER BY admin_id DESC";
+        $result = mysqli_query($this->conn, $sql);
+        $rows = [];
+        if ($result) {
+            while ($r = mysqli_fetch_assoc($result)) {
+                $rows[] = $r;
+            }
         }
+        return $rows;
+    }
+
+    public function deleteAdmin($id) {
+        $id = (int)$id;
+
+        // Move to deleted_admin
+        $sqlMove = "INSERT INTO deleted_admin (admin_id, full_name, email, phone, gender, password, role)
+                    SELECT admin_id, full_name, email, phone, gender, password, role
+                    FROM {$this->adminTable}
+                    WHERE admin_id=$id LIMIT 1";
+        mysqli_query($this->conn, $sqlMove);
+
+        // Soft delete
+        $sql = "UPDATE {$this->adminTable} SET status='Deleted' WHERE admin_id=$id";
+        return mysqli_query($this->conn, $sql);
+    }
+
+    public function getAllEmployees() {
+        $sql = "SELECT * FROM {$this->empTable} WHERE status <> 'Deleted' ORDER BY emp_id DESC";
+        $result = mysqli_query($this->conn, $sql);
+        $rows = [];
+        if ($result) {
+            while ($r = mysqli_fetch_assoc($result)) {
+                $rows[] = $r;
+            }
+        }
+        return $rows;
+    }
+
+    public function addEmployee($data) {
+        $full_name   = mysqli_real_escape_string($this->conn, $data['full_name'] ?? '');
+        $date_joined = mysqli_real_escape_string($this->conn, $data['date_joined'] ?? '');
+        $salary      = mysqli_real_escape_string($this->conn, $data['salary'] ?? '0');
+        $gender      = mysqli_real_escape_string($this->conn, $data['gender'] ?? 'Other');
+        $phone      = mysqli_real_escape_string($this->conn, $data['phone'] ?? '');
+
+        $sql = "INSERT INTO {$this->empTable} (full_name, date_joined, salary, gender, phone)
+                VALUES ('$full_name', '$date_joined', '$salary', '$gender', '$phone')";
+        return mysqli_query($this->conn, $sql);
+    }
+
+    public function deleteEmployee($id) {
+        $id = (int)$id;
+
+        $sqlMove = "INSERT INTO deleted_emp (emp_id, full_name, date_joined, salary, gender, phone)
+                    SELECT emp_id, full_name, date_joined, salary, gender, phone
+                    FROM {$this->empTable}
+                    WHERE emp_id=$id LIMIT 1";
+        mysqli_query($this->conn, $sqlMove);
+
+        $sql = "UPDATE {$this->empTable} SET status='Deleted' WHERE emp_id=$id";
+        return mysqli_query($this->conn, $sql);
+    }
+
+    // Update employee
+    public function updateEmployee($id, $data) {
+        $id = (int)$id;
+        if ($id <= 0) {
+            return false;
+        }
+
+        $full_name   = mysqli_real_escape_string($this->conn, $data['full_name'] ?? '');
+        $date_joined = mysqli_real_escape_string($this->conn, $data['date_joined'] ?? '');
+        $salary      = mysqli_real_escape_string($this->conn, $data['salary'] ?? '0');
+        $gender      = mysqli_real_escape_string($this->conn, $data['gender'] ?? 'Other');
+        $phone       = mysqli_real_escape_string($this->conn, $data['phone'] ?? '');
+
+        $sql = "UPDATE {$this->empTable} SET full_name='$full_name', date_joined='$date_joined', salary='$salary', gender='$gender', phone='$phone' WHERE emp_id=$id";
+        return mysqli_query($this->conn, $sql);
+    }
+
+
+    // Update admin status (Active/Inactive)
+    public function updateStatus($id, $status) {
+        $id = (int)$id;
+        if ($status !== 'Active' && $status !== 'Inactive') {
+            return false;
+        }
+        $status = mysqli_real_escape_string($this->conn, $status);
+        $sql = "UPDATE {$this->adminTable} SET status='$status' WHERE admin_id=$id";
+        return mysqli_query($this->conn, $sql);
+    }
+
+    public function getVerificationRequests() {
+        $sql = "SELECT * FROM {$this->verTable} ORDER BY request_at DESC";
+        $result = mysqli_query($this->conn, $sql);
+        $rows = [];
+        if ($result) {
+            while ($r = mysqli_fetch_assoc($result)) {
+                $rows[] = $r;
+            }
+        }
+        return $rows;
+    }
+
+    public function updateVerificationStatus($id, $status) {
+        $id = (int)$id;
+        $status = mysqli_real_escape_string($this->conn, $status);
+        $sql = "UPDATE {$this->verTable} SET status='$status' WHERE id=$id";
+        return mysqli_query($this->conn, $sql);
     }
 }
 ?>

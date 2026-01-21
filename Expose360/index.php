@@ -1,5 +1,4 @@
 <?php
-// index.php - Expose360 Landing Page
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +44,7 @@
                     <p class="hero-subtitle">Expose the truth while preventing fake news and AI-generated misinformation</p>
                     
                     <div class="hero-buttons">
-                        <a href="Views/Auth/Auth/register.php" class="btn btn-primary">Report Incident</a>
+                        <a href="Views/Auth/Auth/login.php" class="btn btn-primary">Report Incident</a>
                         <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
                     </div>
                 </div>

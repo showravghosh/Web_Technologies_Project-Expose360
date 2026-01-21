@@ -1,7 +1,10 @@
 <?php
-
-
-
+session_start();
+// Only admin can access
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../../Auth/login.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -42,30 +45,31 @@
             New Administrator Setup
         </h3>
 
-        <form>
+        <form action="../../../../Controllers/AdminController.php" method="POST">
+            <input type="hidden" name="action" value="add_admin">
 
             <label>Full Name</label>
             <div class="input-box">
                 <img src="../../../../Resources/Photos/useri.png" class="input-icon">
-                <input type="text" placeholder="Full Name">
+                <input type="text" name="full_name" placeholder="Full Name" required>
             </div>
 
             <label>Email Address</label>
             <div class="input-box">
                 <img src="../../../../Resources/Photos/emaili.png" class="input-icon">
-                <input type="email" placeholder="Email Address">
+                <input type="email" name="email" placeholder="Email Address" required>
             </div>
 
             <label>Phone Number</label>
             <div class="input-box">
                 <img src="../../../../Resources/Photos/phni.png" class="input-icon">
-                <input type="tel" placeholder="Phone Number">
+                <input type="tel" name="phone" placeholder="Phone Number" required>
             </div>
 
             <label>Temporary Password</label>
             <div class="input-box">
                 <img src="../../../../Resources/Photos/passir.png" class="input-icon">
-                <input type="password" placeholder="Password">
+                <input type="password" name="password" placeholder="Password" required>
             </div>
 
             <label>Gender</label>
@@ -83,10 +87,10 @@
 
 
             <div class="form-buttons">
-                <button class="btn add">
+                <button class="btn add" type="submit">
                     <img src="../../../../Resources/Photos/add.png" class="btn-icon"> Add Admin
                 </button>
-                <button class="btn reset">
+                <button class="btn reset" type="reset">
                     <img src="../../../../Resources/Photos/reset.png" class="btn-icon"> Reset
                 </button>
             </div>

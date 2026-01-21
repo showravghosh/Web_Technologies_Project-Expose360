@@ -1,3 +1,14 @@
+<?php
+session_start();
+// Must verify OTP first
+if (!isset($_SESSION['otp_ok']) || $_SESSION['otp_ok'] !== true) {
+    header('Location: forgot_password.php');
+    exit();
+}
+$err = $_SESSION['auth_error'] ?? '';
+unset($_SESSION['auth_error']);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,7 +93,13 @@
                     </div>
                 </div>
 
-                <form id="resetForm" action="login.php" method="POST">
+                <?php if ($err != '') { ?>
+                    <p style="color:#ff4d4d; margin: 10px 0;"><?php echo $err; ?></p>
+                <?php } ?>
+
+                <form id="resetForm" action="../../../Controllers/AuthController.php" method="POST">
+                    <input type="hidden" name="action" value="reset_password">
+                    <input type="hidden" name="action" value="reset_password">
                     <div class="input-group">
                         <label class="input-label">New Password</label>
                         <div class="input-wrapper">
@@ -109,6 +126,10 @@
                         <i class="fas fa-sync-alt"></i> Update Password
                     </button>
                 </form>
+
+                <?php if ($err != '') { ?>
+                    <p style="color:#ff4d4d; margin-top: 12px;"><?php echo $err; ?></p>
+                <?php } ?>
 
                 <div class="requirements">
                     <p class="req-title">Security Requirements:</p>

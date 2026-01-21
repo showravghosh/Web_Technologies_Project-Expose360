@@ -1,7 +1,14 @@
 <?php
+session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
+    header('Location: ../Auth/login.php');
+    exit();
+}
 
 
-
+require_once '../../../Models/Post.php';
+$postModel = new Post();
+$feedPosts = $postModel->getFeedPosts();
 ?>
 
 <!DOCTYPE html>
@@ -28,19 +35,18 @@
 
         <nav class="right-section">
             <button class="icon-btn"><a href="dashboard.php" class="home-btn"><img src="../../../Resources/Photos/homei.png" class="nav-icon"></a></button>
-            <button class="icon-btn"><img src="../../../Resources/Photos/bell.png" class="nav-icon"></button>
-            <button class="icon-btn"><img src="../../../Resources/Photos/message.png" class="nav-icon"></button>
+
 
             <!-- PROFILE HOVER DROPDOWN -->
             <div class="profile-container" id="profileContainer">
                 <button class="profile-btn" id="profileBtn">
                     <img src="../../../Resources/Photos/user.png" class="profileh">
-                    <span class="profile-name"></span>
+                    <span class="profile-name"><?php echo $_SESSION['user_name'] ?? ''; ?></span>
                 </button>
 
                 <div class="profile-menu" id="profileMenu">
                     <a href="profile.php">Profile Page</a>
-                    <a href="../Auth/login.php" class="logout">Logout</a>
+                    <a href="../../../Controllers/AuthController.php?action=logout" class="logout">Logout</a>
                 </div>
             </div>
         </nav>
@@ -52,15 +58,17 @@
         <h2 class="feed-title">Home Feed</h2>
 
         <!-- NEW POST BOX -->
+        <form method="POST" action="../../../Controllers/PostController.php" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="create_post">
         <div class="new-post-box">
             <p class="np-title">What's on your mind ?</p>
 
-            <textarea placeholder="Start typing your post..." rows="3"></textarea>
+            <textarea name="content" placeholder="Start typing your post..." rows="3"></textarea>
 
             <div class="np-actions">
                 <div class="np-left">
                     <button class="np-icon-btn">
-                        <input type="file" class="photo"></input>
+                        <input type="file" name="photo" class="photo"></input>
                         <img src="../../../Resources/Photos/upload.png" class="small-icon"> Upload Photos
                     </button>
 
@@ -69,46 +77,58 @@
                     </button>
                 </div>
 
-                <button class="post-btn">
+                <button class="post-btn" type="submit">
                     Post <img src="../../../Resources/Photos/post.png" class="post-icon">
                 </button>
             </div>
         </div>
+    </form>
 
-        <!-- EMPTY POST CARD -->
-        <div class="post-card">
-            <div class="post-top">
-                <div class="post-user">
-                    <div class="avatar">SG</div>
-                    <div>
-                        <p class="u-name">User Name</p>
-                        <p class="u-time">Time</p>
+        <?php if (count($feedPosts) == 0) { ?>
+            <div class="post-card">
+                <p class="post-text" style="text-align:center;">No approved posts yet.</p>
+            </div>
+        <?php } ?>
+
+        <?php foreach ($feedPosts as $p) { ?>
+            <div class="post-card">
+                <div class="post-top">
+                    <div class="post-user">
+                        <div class="avatar"><?php echo strtoupper(substr($p['full_name'], 0, 2)); ?></div>
+                        <div>
+                            <p class="u-name"><?php echo htmlspecialchars($p['full_name']); ?></p>
+                            <p class="u-time"><?php echo htmlspecialchars($p['created_at']); ?></p>
+                        </div>
                     </div>
+
+                    <button class="dots-btn">
+                        <img src="../../../Resources/Photos/dots.png" class="dots-icon">
+                    </button>
                 </div>
 
-                <button class="dots-btn">
-                    <img src="../../../Resources/Photos/dots.png" class="dots-icon">
-                </button>
+                <p class="post-text"><?php echo nl2br(htmlspecialchars($p['content'])); ?></p>
+
+                <?php if (!empty($p['photo'])) { ?>
+                    <div style="margin-top:10px;">
+                        <img src="../../../Upload/Photos/<?php echo htmlspecialchars($p['photo']); ?>" style="max-width:100%; border-radius:10px;">
+                    </div>
+                <?php } ?>
+
+                <div class="post-actions">
+                    <button class="post-act-btn">
+                        <img src="../../../Resources/Photos/like.png" class="small-icon"> Likes
+                    </button>
+
+                    <button class="post-act-btn">
+                        <img src="../../../Resources/Photos/comment.png" class="small-icon"> Comments
+                    </button>
+
+                     <button class="post-act-btn">
+                        <img src="../../../Resources/Photos/share.png" class="small-icon"> Share
+                    </button>
+                </div>
             </div>
-
-            <p class="post-text">Post content next time update</p>
-
-            <div class="post-actions">
-                <button class="post-act-btn">
-                    <img src="../../../Resources/Photos/like.png" class="small-icon"> Likes
-                </button>
-
-                <button class="post-act-btn">
-                    <img src="../../../Resources/Photos/comment.png" class="small-icon"> Comments
-                </button>
-
-                 <button class="post-act-btn">
-                    <img src="../../../Resources/Photos/share.png" class="small-icon"> Share
-                </button>
-                
-            </div>
-            
-        </div>
+        <?php } ?>
 
 
         <div class="load-more-wrap">
@@ -143,7 +163,7 @@
             showMenu();
         });
         
-        // Hover to hide menu (with delay)
+        // Hover to hide menu 
         profileContainer.addEventListener('mouseleave', function(e) {
             // Only hide if mouse leaves the entire container
             if (!e.relatedTarget || !profileContainer.contains(e.relatedTarget)) {
@@ -181,6 +201,29 @@
                 profileMenu.style.display = 'none';
             }
         });
+
+        // Create post and avoids reload on submit
+        var postForm = document.querySelector('form input[name="action"][value="create_post"]');
+        if (postForm) {
+            var mainForm = postForm.closest('form');
+            if (mainForm) {
+                mainForm.addEventListener('submit', function(e){
+                    e.preventDefault();
+                    var fd = new FormData(mainForm);
+                    fd.append('action', 'create_post');
+                    fetch('../../../Controllers/AjaxController.php', { method: 'POST', body: fd })
+                        .then(function(r){ return r.json(); })
+                        .then(function(data){
+                            if (data.ok) {
+                                location.href = 'dashboard.php?posted=1';
+                            } else {
+                                alert(data.message || 'Failed');
+                            }
+                        })
+                        .catch(function(){ alert('Failed'); });
+                });
+            }
+        }
     </script>
 </body>
 </html>

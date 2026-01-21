@@ -1,7 +1,12 @@
 <?php
-
-
-
+session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../../Auth/login.php');
+    exit();
+}
+require_once '../../../../Models/Admin.php';
+$adminModel = new Admin();
+$admins = $adminModel->getAllAdmins();
 ?>
 
 <!DOCTYPE html>
@@ -47,13 +52,11 @@
 
             <div class="search-box">
                 <img src="../../../../Resources/Photos/search.png" class="search-icon">
-                <input type="text" placeholder="Search Name, Email, Phone or ID">
+                <input type="text" id="adminSearch" placeholder="Search Name, Email, Phone or ID">
             </div>
 
             <div class="action-buttons">
-                <button class="btn reset">
-                    <img src="../../../../Resources/Photos/reset.png" class="btn-icon"> Reset
-                </button>
+
                 <button class="btn delete">
                     <img src="../../../../Resources/Photos/delete.png" class="btn-icon"> Delete All
                 </button>
@@ -70,21 +73,41 @@
                         <th>Full Name</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <th>Password</th>
                         <th>Gender</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
 
-                <tbody>
-
-
-            </tbody>
+                <tbody id="adminTbody">
+                <?php foreach ($admins as $a) { ?>
+                    <tr class="admin-row" data-id="<?php echo $a['admin_id']; ?>" data-status="<?php echo $a['status']; ?>">
+                        <td><?php echo $a['admin_id']; ?></td>
+                        <td><?php echo $a['full_name']; ?></td>
+                        <td><?php echo $a['email']; ?></td>
+                        <td><?php echo $a['phone']; ?></td>
+                        <td><?php echo $a['password']; ?></td>
+                        <td><?php echo $a['gender']; ?></td>
+                        <td>
+                            <form action="../../../../Controllers/AdminController.php" method="POST" style="display:inline;">
+                                <input type="hidden" name="action" value="delete_admin">
+                                <input type="hidden" name="admin_id" value="<?php echo $a['admin_id']; ?>">
+                                <button type="submit" class="btn delete" onclick="return confirm('Delete this admin?');">
+                                    <img src="../../../../Resources/Photos/delete.png" class="btn-icon"> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
             </table>
         </div>
 
     </div>
 
 </div>
+
+<script src="../../../JavaScript/Admin/Users/admin_list.js" defer></script>
 
 </body>
 </html>

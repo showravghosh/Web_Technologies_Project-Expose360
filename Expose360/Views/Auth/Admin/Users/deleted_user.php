@@ -1,7 +1,19 @@
-<?php 
+<?php
+require_once '../../../../Models/Database.php';
 
+$conn = Database::getInstance()->getConnection();
 
+$deletedUsers = [];
+$sql = "SELECT id, full_name, birth_date, address, division, postal_code, phone, email, gender, photo, document, status
+        FROM deleted_user
+        ORDER BY deleted_at DESC";
 
+$result = mysqli_query($conn, $sql);
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $deletedUsers[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,6 +47,7 @@
 
 </header>
 
+
 <!-- MAIN CONTAINER -->
 <div class="container">
 
@@ -50,12 +63,7 @@
 
             <div class="search-box">
                 <img src="../../../../Resources/Photos/search.png" class="search-icon">
-                <input type="text" placeholder="Search Deleted Users">
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn restore">Restore</button>
-                <button class="btn delete-all">Permanent Delete All</button>
+                <input type="text" id="deletedUserSearch" placeholder="Search Deleted Users">
             </div>
 
         </div>
@@ -82,15 +90,50 @@
                 </thead>
 
                 <tbody>
+                <?php if (!empty($deletedUsers)) { ?>
+                    <?php foreach ($deletedUsers as $u) { ?>
+                        <tr>
+                            <td><?php echo (int)$u['id']; ?></td>
+                            <td><?php echo htmlspecialchars($u['full_name']); ?></td>
+                            <td><?php echo htmlspecialchars($u['birth_date']); ?></td>
+                            <td><?php echo htmlspecialchars($u['address']); ?></td>
+                            <td><?php echo htmlspecialchars($u['division']); ?></td>
+                            <td><?php echo htmlspecialchars($u['postal_code']); ?></td>
+                            <td><?php echo htmlspecialchars($u['phone']); ?></td>
+                            <td><?php echo htmlspecialchars($u['email']); ?></td>
+                            <td><?php echo htmlspecialchars($u['gender']); ?></td>
 
+                            <td style="text-align:center;">
+                                <?php if (!empty($u['photo'])) { ?>
+                                    <a href="../../../../Resources/Photos/<?php echo htmlspecialchars($u['photo']); ?>" target="_blank">View</a>
+                                <?php } else { echo "-"; } ?>
+                            </td>
 
-            </tbody>
+                            <td style="text-align:center;">
+                                <?php if (!empty($u['document'])) { ?>
+                                    <a href="../../../../Resources/Photos/<?php echo htmlspecialchars($u['document']); ?>" target="_blank">View</a>
+                                <?php } else { echo "-"; } ?>
+                            </td>
+
+                            <td><?php echo htmlspecialchars($u['status']); ?></td>
+                            <td style="text-align:center;">-</td>
+                        </tr>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="13" style="text-align:center; padding:18px;">No deleted users found.</td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+
             </table>
         </div>
 
     </div>
 
 </div>
+
+<script src="../../../JavaScript/Admin/Users/deleted_user.js" defer></script>
 
 </body>
 </html>

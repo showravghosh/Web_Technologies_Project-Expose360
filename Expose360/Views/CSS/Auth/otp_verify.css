@@ -1,13 +1,8 @@
-/* CSS STYLES 
- * Reference: W3Schools CSS Tutorial 
- * Colors used in RGB format as requested.
- */
-
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: rgb(15, 23, 42); /* Dark Slate Background */
+    background-color: rgb(15, 23, 42); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,8 +27,8 @@ body {
 .logo-icon {
     width: 48px;
     height: 48px;
-    color: rgb(20, 184, 166); /* Teal Color */
-    margin-right: 12px;
+    color: rgb(20, 184, 166);
+    margin-right : 12px;
 }
 
 .app-title {
@@ -52,7 +47,7 @@ body {
 
 /* Card Style */
 .card {
-    background-color: rgb(30, 41, 59); /* Lighter Slate */
+    background-color: rgb(30, 41, 59); 
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgb(0, 0, 0);
@@ -97,7 +92,7 @@ body {
 
 .info-text-sub {
     font-size: 14px;
-    color: rgb(148, 163, 184); /* Greyish Text */
+    color: rgb(148, 163, 184); 
     margin: 0;
 }
 
@@ -124,14 +119,14 @@ body {
 }
 
 .otp-input:focus {
-    border-color: rgb(20, 184, 166); /* Teal Focus Border */
+    border-color: rgb(20, 184, 166); 
     box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
 }
 
 /* Buttons */
 .verify-btn {
     width: 100%;
-    background-color: rgb(13, 148, 136); /* Teal Button */
+    background-color: rgb(13, 148, 136); 
     color: rgb(255, 255, 255);
     border: none;
     padding: 12px;

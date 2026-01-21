@@ -160,12 +160,7 @@ table {
     border-collapse: collapse;
 }
 
-<<<<<<< HEAD
-th,
-td {
-=======
 th, td {
->>>>>>> refs/remotes/origin/master
     padding: 12px;
     text-align: left;
     color: whitesmoke;
@@ -194,8 +189,4 @@ td:last-child {
 
 .action-link.delete {
     color: rgb(239, 68, 68);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> refs/remotes/origin/master

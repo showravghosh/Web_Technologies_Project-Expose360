@@ -1,4 +1,4 @@
-/* ===== RESET & BASE STYLES ===== */
+/*RESET & BASE STYLES */
 * {
     margin: 0;
     padding: 0;
@@ -19,7 +19,7 @@ body {
     padding: 0 15px;
 }
 
-/* ===== HEADER & NAVIGATION ===== */
+/*  HEADER & NAVIGATION */
 .header {
     background-color: rgb(25, 35, 70);
     color: rgb(255, 255, 255);
@@ -105,7 +105,7 @@ body {
     background-color: rgb(0, 180, 130);
 }
 
-/* ===== HERO SECTION ===== */
+/* HERO SECTION  */
 .hero {
     padding: 80px 0;
     background: linear-gradient(135deg, rgb(25, 35, 70) 0%, rgb(40, 60, 120) 100%);
@@ -191,7 +191,7 @@ body {
     font-size: 20px;
 }
 
-/* ===== FEATURES SECTION ===== */
+/* FEATURES SECTION */
 .features {
     padding: 80px 0;
     background-color: rgb(255, 255, 255);
@@ -254,7 +254,7 @@ body {
     font-size: 15px;
 }
 
-/* ===== HOW IT WORKS SECTION ===== */
+/*  HOW IT WORKS SECTION  */
 .how-it-works {
     padding: 80px 0;
     background-color: rgb(245, 248, 255);
@@ -304,7 +304,7 @@ body {
     font-size: 15px;
 }
 
-/* ===== USER TYPES SECTION ===== */
+/*  USER TYPES SECTION  */
 .user-types {
     padding: 80px 0;
     background-color: rgb(255, 255, 255);
@@ -351,7 +351,7 @@ body {
     font-weight: bold;
 }
 
-/* ===== FOOTER ===== */
+/* FOOTER */
 .footer {
     background-color: rgb(25, 35, 70);
     color: rgb(220, 220, 220);
@@ -409,7 +409,7 @@ body {
     font-size: 14px;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+/*  RESPONSIVE DESIGN  */
 @media (max-width: 992px) {
     .hero-content {
         flex-direction: column;

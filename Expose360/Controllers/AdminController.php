@@ -1,99 +1,80 @@
 <?php
+
 session_start();
-require_once '../models/Admin.php';
-require_once '../models/User.php';
 
-class AdminController {
-    private $adminModel;
-    private $userModel;
+require_once '../Models/Admin.php';
+require_once '../Models/User.php';
 
-    public function __construct() {
-        $this->adminModel = new Admin($_SESSION['user_id'] ?? null);
-        $this->userModel = new User();
-    }
-
-    // Check if user is admin
-    private function checkAdminAccess() {
-        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-            header('Location: ../views/auth/login.php');
-            exit();
-        }
-    }
-
-    // Display dashboard
-    public function dashboard() {
-        $this->checkAdminAccess();
-
-        $stats = $this->adminModel->getDashboardStats();
-        $recentActivities = $this->adminModel->getRecentActivities();
-        $categoryStats = $this->adminModel->getCategoryStats();
-        $monthlyGrowth = $this->adminModel->getMonthlyGrowth();
-
-        // Get admin profile
-        $adminProfile = $this->userModel->getUserById($_SESSION['user_id']);
-
-        include '../views/admin/dashboard.php';
-    }
-
-    // Get dashboard data via AJAX
-    public function getDashboardData() {
-        $this->checkAdminAccess();
-
-        $response = [];
-
-        // Get stats
-        $stats = $this->adminModel->getDashboardStats();
-        if ($stats['success']) {
-            $response['stats'] = $stats['data'];
-        }
-
-        // Get recent activities
-        $activities = $this->adminModel->getRecentActivities();
-        if ($activities['success']) {
-            $response['activities'] = $activities['data'];
-        }
-
-        // Get category stats
-        $categories = $this->adminModel->getCategoryStats();
-        if ($categories['success']) {
-            $response['categories'] = $categories['data'];
-        }
-
-        // Get monthly growth
-        $growth = $this->adminModel->getMonthlyGrowth();
-        if ($growth['success']) {
-            $response['growth'] = $growth['data'];
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    }
-
-    // Logout
-    public function logout() {
-        session_destroy();
-        header('Location: ../views/auth/login.php');
-        exit();
-    }
+function go($path) {
+    header("Location: $path");
+    exit();
 }
 
-// Handle requests
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $action = $_GET['action'] ?? 'dashboard';
-    $controller = new AdminController();
-
-    switch ($action) {
-        case 'dashboard':
-            $controller->dashboard();
-            break;
-        case 'getData':
-            $controller->getDashboardData();
-            break;
-        case 'logout':
-            $controller->logout();
-            break;
-        default:
-            $controller->dashboard();
-    }
+// admin protection
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    go('../Views/Auth/Auth/login.php');
 }
+
+$adminModel = new Admin();
+$userModel = new User();
+
+// Add admin
+if (isset($_POST['action']) && $_POST['action'] === 'add_admin') {
+    $data = [
+        'full_name' => $_POST['full_name'] ?? '',
+        'email' => $_POST['email'] ?? '',
+        'phone' => $_POST['phone'] ?? '',
+        'gender' => $_POST['gender'] ?? 'Other',
+        'password' => md5($_POST['password'] ?? ''),
+        'role' => $_POST['role'] ?? 'Admin'
+    ];
+    $adminModel->registerAdmin($data);
+    go('../Views/Auth/Admin/Users/admin_list.php');
+}
+
+// Delete admin
+if (isset($_POST['action']) && $_POST['action'] === 'delete_admin') {
+    $adminModel->deleteAdmin($_POST['admin_id'] ?? 0);
+    go('../Views/Auth/Admin/Users/admin_list.php');
+}
+
+// Delete user
+if (isset($_POST['action']) && $_POST['action'] === 'delete_user') {
+    $userModel->deleteUser($_POST['id'] ?? 0);
+    go('../Views/Auth/Admin/Users/user_list.php');
+}
+
+// Delete all users
+if (isset($_POST['action']) && $_POST['action'] === 'delete_all_users') {
+    $userModel->deleteAllUsers();
+    go('../Views/Auth/Admin/Users/user_list.php');
+}
+
+// Add employee
+if (isset($_POST['action']) && $_POST['action'] === 'add_employee') {
+    $data = [
+        'full_name' => $_POST['full_name'] ?? '',
+        'date_joined' => $_POST['date_joined'] ?? '',
+        'salary' => $_POST['salary'] ?? '',
+        'gender' => $_POST['gender'] ?? 'Other',
+        'phone' => $_POST['phone'] ?? ''
+    ];
+    $adminModel->addEmployee($data);
+    go('../Views/Auth/Admin/Users/employee_list.php');
+}
+
+// Delete employee
+if (isset($_POST['action']) && $_POST['action'] === 'delete_employee') {
+    $adminModel->deleteEmployee($_POST['emp_id'] ?? 0);
+    go('../Views/Auth/Admin/Users/employee_list.php');
+}
+
+// Update verification req status
+if (isset($_POST['action']) && $_POST['action'] === 'update_verification') {
+    $adminModel->updateVerificationStatus($_POST['id'] ?? 0, $_POST['status'] ?? 'Pending');
+    go('../Views/Auth/Admin/Users/verification_request.php');
+}
+
+go('../Views/Auth/Admin/dashboard.php');
+
 ?>

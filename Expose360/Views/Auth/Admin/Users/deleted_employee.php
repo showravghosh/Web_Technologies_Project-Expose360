@@ -1,7 +1,17 @@
 <?php
 
+require_once '../../../../Models/Database.php';
 
+$conn = Database::getInstance()->getConnection();
 
+$deletedEmployees = [];
+$sql = "SELECT emp_id, full_name, date_joined, salary, gender, phone FROM deleted_emp ORDER BY deleted_at DESC";
+$result = mysqli_query($conn, $sql);
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $deletedEmployees[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,16 +57,7 @@
 
             <div class="search-box">
                 <img src="../../../../Resources/Photos/search.png" class="search-icon">
-                <input type="text" placeholder="Search Deleted Employees">
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn restore">
-                    <img src="../../../../Resources/Photos/restore.png" class="btn-icon"> Restore
-                </button>
-                <button class="btn delete">
-                    <img src="../../../../Resources/Photos/delete.png" class="btn-icon"> Permanent Delete All
-                </button>
+                <input type="text" id="deletedEmpSearch" placeholder="Search Deleted Employees">
             </div>
 
         </div>
@@ -72,13 +73,26 @@
                         <th>Salary</th>
                         <th>Phone Number</th>
                         <th>Gender</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
 
-                <tbody>
-
-
+                <tbody id="deletedEmpTbody">
+                    <?php if (!empty($deletedEmployees)) { ?>
+                        <?php foreach ($deletedEmployees as $e) { ?>
+                            <tr>
+                                <td><?php echo (int)$e['emp_id']; ?></td>
+                                <td><?php echo htmlspecialchars($e['full_name']); ?></td>
+                                <td><?php echo htmlspecialchars($e['date_joined']); ?></td>
+                                <td><?php echo htmlspecialchars($e['salary']); ?></td>
+                                <td><?php echo htmlspecialchars($e['phone'] ?? '-'); ?></td>
+                                <td><?php echo htmlspecialchars($e['gender']); ?></td>
+                            </tr>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding:18px;">No deleted employees found.</td>
+                        </tr>
+                    <?php } ?>
             </tbody>
             </table>
         </div>
@@ -86,6 +100,8 @@
     </div>
 
 </div>
+
+<script src="../../../JavaScript/Admin/Users/deleted_employee.js" defer></script>
 
 </body>
 </html>

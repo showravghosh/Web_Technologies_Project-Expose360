@@ -1,21 +1,18 @@
 <?php
-// PHP code to handle form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Check if role is selected
-    if (isset($_POST['role'])) {
-        $role = $_POST['role'];
-        
-        // If role is "user", redirect to dashboard.php
-        if ($role == "user") {
-            header("Location: ../User/dashboard.php");
-            exit();
-        }
-         elseif ($role == "admin") {
-             header("Location: ../Admin/dashboard.php");
-             exit();
-        }
-    }
+session_start();
+
+// If already logged in, go to correct dashboard
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'user') {
+    header('Location: ../User/dashboard.php');
+    exit();
 }
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+    header('Location: ../Admin/dashboard.php');
+    exit();
+}
+
+$err = $_SESSION['auth_error'] ?? '';
+unset($_SESSION['auth_error']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,9 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="page">
-        <!-- Updated back button to point to home/index.php -->
-        
-
         <!-- Left Section -->
         <div class="login-box">
 
@@ -41,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h2>Welcome Back</h2>
             <p>Please enter your details to access your dashboard.</p>
 
-            <form method="POST" action="">
+            <form method="POST" action="../../../Controllers/AuthController.php">
                 <div class="input-group">
                     <img src="../../../Resources/Photos/useri.png" class="input-icon" alt="User">
                     <label>Phone or Email</label>
@@ -64,21 +58,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </select>
                 </div>
 
+                <?php if ($err != '') { ?>
+                    <p style="color:#ff4d4d; margin: 10px 0;"><?php echo $err; ?></p>
+                <?php } ?>
+
                 <div class="actions">
                     <a href="forgot_password.php" class="forgot">Forgot Password?</a>
                     <a href="register.php" class="create">Create New</a>
                         
                 </div>
-                <div class="spacer">
-                    <a href="reset_password.php" class="reset-link">Reset Password</a>
-                </div>
-                
-
-                <!-- Button container for better positioning -->
                 <div class="button-container">
+                    <input type="hidden" name="action" value="user_login" id="login_action">
                     <button type="submit">Sign In to Account</button>
                 </div>
             </form>
+
+            <script>
+                const roleSel = document.querySelector('select[name="role"]');
+                const actionInp = document.getElementById('login_action');
+                roleSel.addEventListener('change', function(){
+                    if (this.value === 'admin') actionInp.value = 'admin_login';
+                    else actionInp.value = 'user_login';
+                });
+            </script>
 
             <div class="footer">
                 <a href="../../contribution.php"><img src="../../../Resources/Photos/coni.png" class="footer-icon" alt="Con">Contributions</a>

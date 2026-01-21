@@ -1,6 +1,27 @@
 <?php
 session_start();
-// You can add PHP logic here to verify email, user session, etc.
+//email OTP verification for password reset
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
+    $_SESSION['reset_email'] = $_POST['email'];
+    // Create a 6-digit OTP (demo). In real use, send via email.
+    $_SESSION['otp'] = strval(rand(100000, 999999));
+    unset($_SESSION['otp_ok']);
+}
+
+// When verifying OTP
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['otp_code'])) {
+    $otp = $_POST['otp_code'];
+    if (isset($_SESSION['otp']) && $otp === $_SESSION['otp']) {
+        $_SESSION['otp_ok'] = true;
+        header('Location: reset_password.php');
+        exit();
+    } else {
+        $_SESSION['auth_error'] = 'Invalid OTP. Please try again.';
+    }
+}
+
+$err = $_SESSION['auth_error'] ?? '';
+unset($_SESSION['auth_error']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,9 +50,17 @@ session_start();
             <div class="info-box">
                 <p class="info-text-main">A 6-digit OTP has been sent to your email.</p>
                 <p class="info-text-sub">Please check your inbox (and spam folder) to find the code.</p>
+                <?php if (isset($_SESSION['otp'])) { ?>
+                    <p class="info-text-sub">Demo OTP (for testing): <?php echo $_SESSION['otp']; ?></p>
+                <?php } ?>
             </div>
 
-            <form id="otpForm" onsubmit="verifyOTP(event)">
+            <?php if ($err != '') { ?>
+                <p style="color:#ff4d4d; margin: 10px 0; text-align:center;"><?php echo $err; ?></p>
+            <?php } ?>
+
+            <form id="otpForm" method="POST" action="">
+                <input type="hidden" name="otp_code" id="otp_code" value="">
                 <div class="otp-container">
                     <!-- 6 Input fields -->
                     <input type="text" class="otp-input" maxlength="1" id="otp-1" oninput="moveToNext(this, 'otp-2')" onkeydown="handleBackspace(event, this, null)">
@@ -56,6 +85,6 @@ session_start();
         </div>
     </div>
 
-    <script src="../JavaScript/otpVerification.js"></script>
+    <script src="../../JavaScript/Auth/otp_verify.js" defer></script>
 </body>
 </html>

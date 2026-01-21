@@ -1,158 +1,156 @@
 <?php
-require_once '../models/User.php';
-require_once '../models/Admin.php';
 
-class AuthController {
-    
-    // Handle user registration
-    // In the handleRegister() method, add more validation:
+session_start();
 
-// Update the handleRegister method in AuthController.php
+require_once '../Models/User.php';
+require_once '../Models/Admin.php';
 
-public function handleRegister() {
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Get and sanitize inputs
-        $full_name = trim($_POST['full_name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $phone = trim($_POST['phone'] ?? '');
-        $password = $_POST['password'] ?? '';
-        
-        // Validate inputs
-        $errors = [];
-        
-        // Validate full name
-        if(empty($full_name)) {
-            $errors[] = "Full name is required";
-        } elseif(strlen($full_name) < 2) {
-            $errors[] = "Full name must be at least 2 characters";
-        } elseif(strlen($full_name) > 100) {
-            $errors[] = "Full name cannot exceed 100 characters";
-        }
-        
-        // Validate email
-        if(empty($email)) {
-            $errors[] = "Email is required";
-        } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Please enter a valid email address";
-        } elseif(strlen($email) > 100) {
-            $errors[] = "Email cannot exceed 100 characters";
-        }
-        
-        // Validate phone (optional)
-        if(!empty($phone) && strlen($phone) > 20) {
-            $errors[] = "Phone number cannot exceed 20 characters";
-        }
-        
-        // Validate password
-        if(empty($password)) {
-            $errors[] = "Password is required";
-        } elseif(strlen($password) < 8) {
-            $errors[] = "Password must be at least 8 characters";
-        }
-        
-        // If there are validation errors
-        if(!empty($errors)) {
-            echo json_encode([
-                "success" => false,
-                "message" => implode("<br>", $errors)
-            ]);
-            return;
-        }
-        
-        // Create User model instance
-        $user = new User();
-        
-        // Check if email already exists
-        if($user->checkEmail($email)) {
-            echo json_encode([
-                "success" => false,
-                "message" => "This email is already registered. Please use a different email or login."
-            ]);
-            return;
-        }
-        
-        // Attempt to register user
-        try {
-            if($user->register($full_name, $email, $phone, $password)) {
-                echo json_encode([
-                    "success" => true,
-                    "message" => "Registration successful! You will be redirected to login page."
-                ]);
-            } else {
-                echo json_encode([
-                    "success" => false,
-                    "message" => "Registration failed due to server error. Please try again."
-                ]);
-            }
-        } catch(Exception $e) {
-            echo json_encode([
-                "success" => false,
-                "message" => "An error occurred during registration. Please try again."
-            ]);
-        }
-    }
+// Header Function
+function go($path) {
+    header("Location: $path");
+    exit();
 }
-    
-    // Handle user login
-    public function handleUserLogin() {
-        session_start();
-        
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            
-            $user = new User();
-            $result = $user->login($email, $password);
-            
-            if($result) {
-                $_SESSION['user_id'] = $result['id'];
-                $_SESSION['user_name'] = $result['full_name'];
-                $_SESSION['user_email'] = $result['email'];
-                $_SESSION['role'] = 'user';
-                
-                echo json_encode(array(
-                    "success" => true,
-                    "message" => "Login successful",
-                    "redirect" => "index.php?page=user_dashboard"
-                ));
-            } else {
-                echo json_encode(array(
-                    "success" => false,
-                    "message" => "Invalid email or password"
-                ));
-            }
-        }
+
+//USER LOGIN
+if (isset($_POST['action']) && $_POST['action'] === 'user_login') {
+    $emailOrPhone = $_POST['email'] ?? '';
+    $password = md5($_POST['password'] ?? '');
+
+    $user = new User();
+    // Account Active/Inactive (but not Deleted)
+    $any = $user->loginAnyStatus($emailOrPhone, $password);
+
+    if ($any && ($any['status'] ?? '') === 'Inactive') {
+        $_SESSION['auth_error'] = 'Login failed: account is inactive';
+        go('../Views/Auth/Auth/login.php');
     }
-    
-    // Handle admin login
-    public function handleAdminLogin() {
-        session_start();
-        
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            
-            $admin = new Admin();
-            $result = $admin->login($email, $password);
-            
-            if($result) {
-                $_SESSION['admin_id'] = $result['id'];
-                $_SESSION['admin_name'] = $result['full_name'];
-                $_SESSION['admin_email'] = $result['email'];
-                $_SESSION['role'] = 'admin';
-                
-                echo json_encode(array(
-                    "success" => true,
-                    "message" => "Admin login successful",
-                    "redirect" => "index.php?page=admin_dashboard"
-                ));
-            } else {
-                echo json_encode(array(
-                    "success" => false,
-                    "message" => "Invalid admin credentials"
-                ));
-            }
-        }
+
+    $row = $user->login($emailOrPhone, $password);
+
+    if ($row) {
+        $_SESSION['user_id'] = $row['id'];
+        $_SESSION['user_name'] = $row['full_name'];
+        $_SESSION['role'] = 'user';
+        go('../Views/Auth/User/dashboard.php');
     }
+
+    $_SESSION['auth_error'] = 'Invalid user credentials';
+    go('../Views/Auth/Auth/login.php');
 }
+
+// ADMIN LOGIN 
+if (isset($_POST['action']) && $_POST['action'] === 'admin_login') {
+    $email = $_POST['email'] ?? '';
+    $password = md5($_POST['password'] ?? '');
+
+    $admin = new Admin();
+    $any = $admin->loginAnyStatus($email, $password);
+
+    if ($any && ($any['status'] ?? '') === 'Inactive') {
+        $_SESSION['auth_error'] = 'Login failed: account is inactive';
+        go('../Views/Auth/Auth/login.php');
+    }
+
+    $row = $admin->login($email, $password);
+
+    if ($row) {
+        $_SESSION['admin_id'] = $row['admin_id'];
+        $_SESSION['admin_name'] = $row['full_name'];
+        $_SESSION['role'] = 'admin';
+        go('../Views/Auth/Admin/dashboard.php');
+    }
+
+    $_SESSION['auth_error'] = 'Invalid admin credentials';
+    go('../Views/Auth/Auth/login.php');
+}
+
+//  USER REGISTER 
+if (isset($_POST['action']) && $_POST['action'] === 'user_register') {
+    $user = new User();
+
+    // Basic password confirm check
+    if (($_POST['password'] ?? '') !== ($_POST['confirm_password'] ?? '')) {
+        $_SESSION['auth_error'] = 'Password and Re-enter Password do not match';
+        go('../Views/Auth/Auth/register.php');
+    }
+
+    $email = $_POST['email'] ?? '';
+    if ($user->checkEmail($email)) {
+        $_SESSION['auth_error'] = 'This email is already registered';
+        go('../Views/Auth/Auth/register.php');
+    }
+
+    // Uploads: Photo and Document
+    $photoName = '';
+    if (isset($_FILES['photo']) && $_FILES['photo']['name'] != '') {
+        $photoName = time() . '_' . basename($_FILES['photo']['name']);
+        @move_uploaded_file($_FILES['photo']['tmp_name'], '../Resources/Photos/' . $photoName);
+    }
+
+    $docName = '';
+    if (isset($_FILES['document']) && $_FILES['document']['name'] != '') {
+        $docName = time() . '_' . basename($_FILES['document']['name']);
+        @move_uploaded_file($_FILES['document']['tmp_name'], '../Resources/Photos/' . $docName);
+    }
+
+    $data = [
+        'full_name' => trim(($_POST['first_name'] ?? '') . ' ' . ($_POST['last_name'] ?? '')),
+        'birth_date' => $_POST['birth_date'] ?? '',
+        'address' => $_POST['address'] ?? '',
+        'division' => $_POST['division'] ?? '',
+        'postal_code' => $_POST['postal_code'] ?? '',
+        'phone' => $_POST['phone'] ?? '',
+        'email' => $_POST['email'] ?? '',
+        'password' => md5($_POST['password'] ?? ''),
+        'gender' => $_POST['gender'] ?? 'Other',
+        'photo' => $photoName,
+        'document' => $docName,
+    ];
+
+    $ok = $user->register($data);
+    if ($ok) {
+        go('../Views/Auth/Auth/login.php');
+    }
+
+    $_SESSION['auth_error'] = 'Registration failed (please check required fields)';
+    go('../Views/Auth/Auth/register.php');
+}
+
+//  LOGOUT
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    session_destroy();
+    go('../Views/Auth/Auth/login.php');
+}
+
+//  PASSWORD RESET (after OTP verification)
+if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
+    $email = $_SESSION['reset_email'] ?? '';
+    $newPass = $_POST['password'] ?? '';
+    $newPass = md5($_POST['password'] ?? '');
+
+    if ($email == '') {
+        $_SESSION['auth_error'] = 'Reset session expired. Please try again.';
+        go('../Views/Auth/Auth/forgot_password.php');
+    }
+
+    if ($newPass == '' || $newPass !== $confirm) {
+        $_SESSION['auth_error'] = 'Passwords do not match';
+        go('../Views/Auth/Auth/reset_password.php');
+    }
+
+    $user = new User();
+    if ($user->updatePasswordByEmail($email, $newPass)) {
+        unset($_SESSION['reset_email']);
+        unset($_SESSION['otp']);
+        unset($_SESSION['otp_ok']);
+        go('../Views/Auth/Auth/login.php');
+    }
+
+    $_SESSION['auth_error'] = 'Failed to update password';
+    go('../Views/Auth/Auth/reset_password.php');
+}
+
+// If someone opens controller directly
+go('../index.php');
+
 ?>
