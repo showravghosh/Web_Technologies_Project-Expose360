@@ -1,0 +1,223 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: rgb(15, 23, 42); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: rgb(255, 255, 255);
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+}
+
+/* Logo Area */
+.logo-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    color: rgb(20, 184, 166);
+    margin-right : 12px;
+}
+
+.app-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    margin-top: 0;
+}
+
+/* Card Style */
+.card {
+    background-color: rgb(30, 41, 59); 
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgb(0, 0, 0);
+    border: 1px solid rgb(51, 65, 85);
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: rgb(20, 184, 166);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.back-button:hover {
+    color: rgb(45, 212, 191);
+}
+
+.logo-section h1 span {
+    color: turquoise;
+}
+
+/* Info Box */
+.info-box {
+    background-color: rgba(51, 65, 85, 0.5);
+    border: 1px solid rgba(13, 148, 136, 0.5);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.info-text-main {
+    font-weight: bold;
+    margin: 0 0 8px 0;
+}
+
+.info-text-sub {
+    font-size: 14px;
+    color: rgb(148, 163, 184); 
+    margin: 0;
+}
+
+/* Input Fields Container */
+.otp-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.otp-input {
+    width: 40px;
+    height: 50px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(30, 41, 59);
+    border: 1px solid rgb(51, 65, 85);
+    border-radius: 8px;
+    color: rgb(255, 255, 255);
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.otp-input:focus {
+    border-color: rgb(20, 184, 166); 
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
+}
+
+/* Buttons */
+.verify-btn {
+    width: 100%;
+    background-color: rgb(13, 148, 136); 
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.verify-btn:hover {
+    background-color: rgb(15, 118, 110);
+}
+
+.resend-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.resend-btn {
+    background: none;
+    border: none;
+    color: rgb(45, 212, 191);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 0 auto;
+}
+
+.resend-btn:hover {
+    text-decoration: underline;
+}
+
+/* Loading Spinner for OTP verification */
+.loading-spinner {
+    display: none;
+    border: 3px solid rgba(20, 184, 166, 0.2);
+    border-top: 3px solid rgb(20, 184, 166);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Success/Error Messages */
+.message-box {
+    display: none;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.success-message {
+    background-color: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.5);
+    color: rgb(34, 197, 94);
+}
+
+.error-message {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    color: rgb(239, 68, 68);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+    .card {
+        padding: 20px;
+    }
+    .otp-input {
+        width: 35px;
+        height: 45px;
+        font-size: 20px;
+    }
+    .app-title {
+        font-size: 24px;
+    }
+    .page-title {
+        font-size: 24px;
+    }
+}
